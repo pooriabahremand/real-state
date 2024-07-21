@@ -17,7 +17,7 @@ import viteLogo from "/vite.svg";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import { useContext } from "react";
-import { MUIWrapperContext } from "../MUI/MUIWrapper";
+import { MUIWrapperContext } from "../context/Context";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 
