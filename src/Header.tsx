@@ -7,46 +7,37 @@ import {
   Typography,
   Menu,
   Container,
-  Avatar,
   Button,
-  Tooltip,
-  MenuItem,
   useTheme,
 } from "@mui/material";
 import viteLogo from "/vite.svg";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import { useContext } from "react";
-import { MUIWrapperContext } from "../context/Context";
+import { Context } from "./context/Context";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import { Link } from "react-router-dom";
 
-const pages = ["آگهی ها", "ثبت آگهی جدید"];
-const settings = ["پروفایل", "داشبورد", "خروج"];
+const pages = [
+  { path: "/ads", label: "آگهی ها" }, // Use objects with paths
+  { path: "/create-ad", label: "ثبت آگهی جدید" },
+];
 
 export default function Header() {
   const theme = useTheme();
-  const { toggleColorMode } = useContext(MUIWrapperContext);
+  const { toggleColorMode, isAuthenticated, setIsAuthenticated } =
+    useContext(Context);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -90,9 +81,15 @@ export default function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Button
+                  key={page.label}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "inherit", display: "block" }}
+                  component={Link} // Use RouterLink for navigation
+                  to={page.path} // Pass the path from the object
+                >
+                  {page.label}
+                </Button>
               ))}
             </Menu>
           </Box>
@@ -123,16 +120,25 @@ export default function Header() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.label}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "inherit", display: "block" }}
+                component={Link} // Use RouterLink for navigation
+                to={page.path} // Pass the path from the object
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box
+            sx={{
+              flexGrow: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
             <IconButton
               sx={{ fontSize: "1rem" }}
               onClick={toggleColorMode}
@@ -151,33 +157,25 @@ export default function Header() {
               )}
             </IconButton>
 
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            {isAuthenticated ? (
+              <Link
+                to="/"
+                style={{ textDecoration: "none", color: "inherit" }}
+                onClick={() => {
+                  setIsAuthenticated(false);
+                  sessionStorage.removeItem("user");
+                }}
+              >
+                <Typography textAlign="center">خروج</Typography>
+              </Link>
+            ) : (
+              <Link
+                to="/sign-in"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <Typography textAlign="center">ورود | ثبت نام</Typography>
+              </Link>
+            )}
           </Box>
         </Toolbar>
       </Container>

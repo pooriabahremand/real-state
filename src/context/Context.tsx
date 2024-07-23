@@ -1,16 +1,17 @@
 import { createTheme, PaletteMode, ThemeProvider } from "@mui/material";
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
-/**
-  TypeScript and React inconvenience:
-  These functions are in here purely for types! 
-  They will be overwritten - it's just that
-  createContext must have an initial value.
-  Providing a type that could be 'null | something' 
-  and initiating it with *null* would be uncomfortable :)
-*/
-export const MUIWrapperContext = createContext({
+// Define the type for your Context value
+interface ContextValue {
+  toggleColorMode: () => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+export const Context = createContext<ContextValue>({
   toggleColorMode: () => {},
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
 });
 
 export default function MUIWrapper({
@@ -19,6 +20,16 @@ export default function MUIWrapper({
   children: React.ReactNode;
 }) {
   const [mode, setMode] = useState<PaletteMode>("light");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("user")) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [isAuthenticated]);
+
   const muiWrapperUtils = useMemo(
     () => ({
       toggleColorMode: () => {
@@ -42,8 +53,14 @@ export default function MUIWrapper({
   );
 
   return (
-    <MUIWrapperContext.Provider value={muiWrapperUtils}>
+    <Context.Provider
+      value={{
+        toggleColorMode: muiWrapperUtils.toggleColorMode,
+        isAuthenticated,
+        setIsAuthenticated,
+      }}
+    >
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </MUIWrapperContext.Provider>
+    </Context.Provider>
   );
 }

@@ -1,18 +1,17 @@
 import React from "react";
-import Header from "./components/Header";
-import MUIWrapper from "./context/Context";
-import { ToastContainer } from "react-toastify";
-// import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
+import Header from "./Header";
+import SignInComponent from "./SignInComponent";
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./Home";
 
 function App(): React.ReactNode {
   return (
     <>
-      <ToastContainer />
-      <MUIWrapper>
-        <Header />
-        <SignUp />
-      </MUIWrapper>
+      <Header />
+      <Routes>
+        <Route index element={<HomePage />} />
+        <Route path="sign-in" element={<SignInComponent />} />
+      </Routes>
     </>
   );
 }

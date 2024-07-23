@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,10 +14,17 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { Context } from "../context/Context";
 
 export default function SignIn() {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const { setIsAuthenticated } = useContext(Context);
+  const navigate = useNavigate();
+
+  if (sessionStorage.getItem("user")) {
+    navigate("/");
+  }
 
   const validation = (email: string, password: string) => {
     let validate = true;
@@ -36,12 +43,14 @@ export default function SignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     if (
-      validation(data.get("email") as string, data.get("password") as string)
+      validation(
+        data.get("signIn-email") as string,
+        data.get("signIn-password") as string
+      )
     ) {
-      console.log({
-        email: data.get("email"),
-        password: data.get("password"),
-      });
+      setIsAuthenticated(true);
+      sessionStorage.setItem("user", data.get("signIn-email") as string);
+      navigate("/");
     } else {
       console.log("not Validated");
     }
@@ -69,10 +78,10 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="signIn-email"
             // value={email}
             label="آدرس ایمیل"
-            name="email"
+            name="signIn-email"
             // onChange={(event) => setEmail((_prevState) => event.target.value)}
             autoComplete="email"
             autoFocus
@@ -81,14 +90,14 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            name="password"
+            name="signIn-password"
             label="رمز عبور"
             type="password"
             // value={password}
             // onChange={(event) =>
             //   setPassword((_prevState) => event.target.value)
             // }
-            id="password"
+            id="signIn-password"
             autoComplete="current-password"
           />
           <FormControlLabel
