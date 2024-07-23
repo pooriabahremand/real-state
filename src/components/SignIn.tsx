@@ -1,4 +1,5 @@
-import * as React from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,15 +12,39 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SignIn() {
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+
+  const validation = (email: string, password: string) => {
+    let validate = true;
+    if (!email) {
+      toast.warning("Please enter your email");
+      validate = false;
+    } else if (!password) {
+      toast.warning("Please enter your password");
+      validate = false;
+    }
+
+    return validate;
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (
+      validation(data.get("email") as string, data.get("password") as string)
+    ) {
+      console.log({
+        email: data.get("email"),
+        password: data.get("password"),
+      });
+    } else {
+      console.log("not Validated");
+    }
   };
 
   return (
@@ -45,8 +70,10 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
+            // value={email}
             label="آدرس ایمیل"
             name="email"
+            // onChange={(event) => setEmail((_prevState) => event.target.value)}
             autoComplete="email"
             autoFocus
           />
@@ -57,6 +84,10 @@ export default function SignIn() {
             name="password"
             label="رمز عبور"
             type="password"
+            // value={password}
+            // onChange={(event) =>
+            //   setPassword((_prevState) => event.target.value)
+            // }
             id="password"
             autoComplete="current-password"
           />
