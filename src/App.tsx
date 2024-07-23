@@ -1,11 +1,14 @@
+import React from "react";
 import Header from "./components/Header";
 import MUIWrapper from "./context/Context";
+import SignIn from "./components/SignIn";
 
-function App() {
+function App(): React.ReactNode {
   return (
     <>
       <MUIWrapper>
         <Header />
+        <SignIn />
       </MUIWrapper>
     </>
   );
