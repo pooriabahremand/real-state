@@ -16,3 +16,17 @@ export interface FetchOptions {
   body?: string; // Can be any JSON-serializable data
   signal?: AbortSignal; // Optional abort signal for timeouts
 }
+
+export interface MUIContextValue {
+  toggleColorMode: () => void;
+}
+
+export interface AuthContextInterface {
+  user: { accessToken: string; userId: number } | null;
+  setUser: (value: { accessToken: string; userId: number } | null) => void;
+}
+
+export interface LocationContextInterface {
+  location: { lat: number; lng: number } | null;
+  setLocation: (value: { lat: number; lng: number }) => void;
+}

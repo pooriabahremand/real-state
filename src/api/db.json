@@ -1,82 +1,64 @@
 {
   "users": [
     {
-      "id": "1",
-      "size": "70",
-      "name": "Leila",
-      "Height": "158"
+      "email": "pooria.bahremand444@gmail.com",
+      "password": "$2a$10$VLe3mPWGqGe3DeiUdWahiuq7lb/RNTTiQ1EnPhSKS6VLnURtfkXmG",
+      "firstName": "پوریا",
+      "lastName": "بهره مند ",
+      "allowExtraEmails": false,
+      "id": 1
     },
     {
-      "id": "2",
-      "size": "75",
-      "name": "Saha",
-      "Height": "160"
+      "email": "pneoooria.bahremand444@gmail.com",
+      "password": "$2a$10$FMx8SOsCu/3Gz56wq7C3LOZs2Gr2g4sE11LV2imBhiR6WWl/WqPju",
+      "firstName": "پوریا",
+      "lastName": "بهره مند ",
+      "allowExtraEmails": false,
+      "id": 2
     },
     {
-      "id": "3",
-      "size": "90",
-      "name": "Setayesh",
-      "Height": "163"
-    },
-    {
-      "id": "4",
-      "size": "80",
-      "name": "Hedieh",
-      "Height": "164"
-    },
-    {
-      "id": "5",
-      "size": "85",
-      "name": "Mahdieh",
-      "Height": "179"
-    },
-    {
-      "id": "6",
-      "size": "70",
-      "name": "Atiyeh",
-      "Height": "174"
-    },
-    {
-      "id": "7",
-      "size": "80",
-      "name": "Fatemeh Kashefi",
-      "Height": "175"
-    },
-    {
-      "id": "8",
-      "size": "70",
-      "name": "Pari",
-      "Height": "170"
-    },
-    {
-      "id": "8",
-      "size": "95",
-      "name": "Fatemeh Nejati",
-      "Height": "160"
-    },
-    {
-      "id": "9",
-      "size": "85",
-      "name": "Mahour",
-      "Height": "173"
-    },
-    {
-      "id": "10",
-      "size": "95",
-      "name": "mobina",
-      "Height": "154"
-    },
-    {
-      "id": "11",
-      "size": "80",
-      "name": "Bahar",
-      "Height": "165"
-    },
-    {
-      "id": "12",
-      "size": "85",
-      "name": "Bahar",
-      "Height": "160"
+      "email": "ricktum.beaker@gmail.com",
+      "password": "$2a$10$uftD1ZavpovxNcVUuTKM6ukJzdyDGv8dK6kJKlnEm7A2qPSnw4gru",
+      "firstName": "پوریا",
+      "lastName": "بهره مند ",
+      "allowExtraEmails": false,
+      "id": 3
     }
-  ]
+  ],
+  "posts": [
+    {
+      "address": "پل چوبی - کوچه فروغی - پلاک 35 - واحد 3",
+      "number": "09931163730",
+      "description": "تخلیه - 94 متر - 2 خواب - نور گیر عالی - بازسازی شده - طبقه 2 رو همکف - مناسب خانواده و مجرد معقول",
+      "latlng": {
+        "lat": 35.700686583713086,
+        "lng": 51.43707525723585
+      },
+      "userId": 1,
+      "id": 1
+    }
+  ],
+  "routes": {
+    "/posts": {
+      "GET": {
+        "middleware": ["perms:444"]
+      }
+    },
+    "/posts/:id": {
+      "GET": {
+        "middleware": ["perms:444"]
+      },
+      "PUT": {
+        "middleware": ["auth", "perms:640"]
+      },
+      "DELETE": {
+        "middleware": ["auth", "perms:640"]
+      }
+    },
+    "/new-post": {
+      "POST": {
+        "middleware": ["auth", "perms:640"]
+      }
+    }
+  }
 }

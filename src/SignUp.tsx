@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,64 +11,70 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { signupValidation, toastWarning } from "./utils/utils";
+import { post } from "./api/HttpHelper";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
 
 export default function SignUp(): React.ReactNode {
-  const validation = (
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string,
-    passConfirm: string
-  ) => {
-    let validate = true;
-    if (!email) {
-      toast.warning("ایمیل خود را وارد کنید");
-      validate = false;
-    }
-    if (!password) {
-      toast.warning("رمز عبور خود را وارد کنید");
-      validate = false;
-    }
-    if (!passConfirm) {
-      toast.warning("بخش تکرار رمز عبور را تکمیل کنید");
-      validate = false;
-    }
-    if (!firstName) {
-      toast.warning("نام خود را وارد کنید");
-      validate = false;
-    }
-    if (!lastName) {
-      toast.warning("نام خانوادگی خود را وارد کنید");
-      validate = false;
-    }
+  const { setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    passConfirm: "",
+    allowExtraEmails: false,
+  });
 
-    return validate;
+  const onChangeHandler = (e: {
+    target: { name: string; value: string };
+  }): void => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
     if (
-      validation(
-        data.get("firstName") as string,
-        data.get("lastName") as string,
-        data.get("email") as string,
-        data.get("password") as string,
-        data.get("password-confirm") as string
+      signupValidation(
+        formData.firstName,
+        formData.lastName,
+        formData.email,
+        formData.password,
+        formData.passConfirm
       )
     ) {
-      console.log({
-        firstName: data.get("firstName"),
-        lastName: data.get("lastName"),
-        email: data.get("email"),
-        password: data.get("password"),
-        passConfirm: data.get("password-confirm"),
-        allowExtraEmails: data.get("checkBox") ? true : false,
+      const result = await post("users", {
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          allowExtraEmails: formData.allowExtraEmails,
+        }),
       });
-    } else {
-      console.log("not validated");
+      if (result.accessToken) {
+        setUser({
+          accessToken: result.accessToken,
+          userId: result.user.id,
+        });
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify({
+            accessToken: result.accessToken,
+            userId: result.user.id,
+          })
+        );
+        navigate("/posts");
+      } else {
+        if (result === "Email already exists") {
+          toastWarning("این ایمیل در سیستم ثبت شده است");
+        } else {
+          toastWarning(result);
+        }
+      }
     }
   };
 
@@ -95,11 +101,13 @@ export default function SignUp(): React.ReactNode {
               <TextField
                 autoComplete="given-name"
                 name="firstName"
+                value={formData.firstName}
                 required
                 fullWidth
                 id="firstName"
                 label="نام"
                 autoFocus
+                onChange={onChangeHandler}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -109,7 +117,9 @@ export default function SignUp(): React.ReactNode {
                 id="lastName"
                 label="نام خانوادگی"
                 name="lastName"
+                value={formData.lastName}
                 autoComplete="family-name"
+                onChange={onChangeHandler}
               />
             </Grid>
             <Grid item xs={12}>
@@ -119,7 +129,9 @@ export default function SignUp(): React.ReactNode {
                 id="email"
                 label="آدرس ایمیل"
                 name="email"
+                value={formData.email}
                 autoComplete="email"
+                onChange={onChangeHandler}
               />
             </Grid>
             <Grid item xs={12}>
@@ -127,30 +139,45 @@ export default function SignUp(): React.ReactNode {
                 required
                 fullWidth
                 name="password"
+                value={formData.password}
                 label="رمز عبور"
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                onChange={onChangeHandler}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                name="password-confirm"
+                name="passConfirm"
+                value={formData.passConfirm}
                 label="تکرار رمز عبور"
                 type="password"
                 id="password-confirm"
                 autoComplete="password-confirm"
+                onChange={onChangeHandler}
               />
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    value="allowExtraEmails"
+                    value={formData.allowExtraEmails}
                     color="primary"
-                    name="checkBox"
+                    name="allowExtraEmails"
+                    onChange={() => {
+                      formData.allowExtraEmails
+                        ? setFormData((state) => ({
+                            ...state,
+                            allowExtraEmails: false,
+                          }))
+                        : setFormData((state) => ({
+                            ...state,
+                            allowExtraEmails: true,
+                          }));
+                    }}
                   />
                 }
                 label="مایل به اطلاع از پروفایل های جدید هستم."

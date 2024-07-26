@@ -18,16 +18,24 @@ import { Context } from "./context/Context";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { Link } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
 
 const pages = [
-  { path: "/ads", label: "آگهی ها" }, // Use objects with paths
-  { path: "/create-ad", label: "ثبت آگهی جدید" },
+  { path: "/posts", label: "آگهی ها" }, // Use objects with paths
+  { path: "/new-post", label: "ثبت آگهی جدید" },
 ];
 
 export default function Header() {
   const theme = useTheme();
-  const { toggleColorMode, isAuthenticated, setIsAuthenticated } =
-    useContext(Context);
+
+  // MUI Context
+  const { toggleColorMode } = useContext(Context);
+
+  // Auth Context
+  const { user, setUser } = useContext(AuthContext);
+
+  
+  console.log("re-rendered in Header");
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -41,7 +49,7 @@ export default function Header() {
   };
 
   return (
-    <AppBar position="static" color="default">
+    <AppBar position="sticky" color="default">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -156,13 +164,12 @@ export default function Header() {
                 </span>
               )}
             </IconButton>
-
-            {isAuthenticated ? (
+            {user ? (
               <Link
-                to="/"
+                to="/posts"
                 style={{ textDecoration: "none", color: "inherit" }}
                 onClick={() => {
-                  setIsAuthenticated(false);
+                  setUser(null);
                   sessionStorage.removeItem("user");
                 }}
               >
@@ -170,7 +177,7 @@ export default function Header() {
               </Link>
             ) : (
               <Link
-                to="/sign-in"
+                to="/login"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Typography textAlign="center">ورود | ثبت نام</Typography>

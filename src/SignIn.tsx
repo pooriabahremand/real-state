@@ -1,58 +1,65 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { Context } from "../context/Context";
+import { signinValidation, toastWarning } from "./utils/utils";
+import { post } from "./api/HttpHelper";
+import { AuthContext } from "./context/AuthContext";
 
 export default function SignIn() {
-  const { setIsAuthenticated } = useContext(Context);
+  const { setUser } = useContext(AuthContext);
+  const [formData, setFormData] = useState({ email: "", password: "" });
+
   const navigate = useNavigate();
 
-  if (sessionStorage.getItem("user")) {
-    navigate("/");
-  }
-
-  const validation = (email: string, password: string) => {
-    let validate = true;
-    if (!email) {
-      toast.warning("Please enter your email");
-      validate = false;
-    } else if (!password) {
-      toast.warning("Please enter your password");
-      validate = false;
-    }
-
-    return validate;
+  const onChangeHandler = (e: {
+    target: { name: string; value: string };
+  }): void => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    if (
-      validation(
-        data.get("signIn-email") as string,
-        data.get("signIn-password") as string
-      )
-    ) {
-      setIsAuthenticated(true);
-      sessionStorage.setItem("user", data.get("signIn-email") as string);
-      navigate("/");
-    } else {
-      console.log("not Validated");
+    if (signinValidation(formData.email, formData.password)) {
+      const result = await post("login", {
+        body: JSON.stringify(formData),
+      });
+
+      if (result.accessToken) {
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify({
+            accessToken: result.accessToken,
+            userId: result.user.id,
+          })
+        );
+        setUser({ accessToken: result.accessToken, userId: result.user.id });
+
+        navigate("/posts");
+      } else {
+        if (result === "Incorrect password") {
+          toastWarning("رمز عبور وارد شده اشتباه است");
+        } else if (result === "Cannot find user") {
+          toastWarning("همچین کاربری یافت نشد");
+        } else {
+          toastWarning(result);
+        }
+      }
     }
   };
 
@@ -78,11 +85,11 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="signIn-email"
-            // value={email}
+            id="email"
+            value={formData.email}
             label="آدرس ایمیل"
-            name="signIn-email"
-            // onChange={(event) => setEmail((_prevState) => event.target.value)}
+            name="email"
+            onChange={onChangeHandler}
             autoComplete="email"
             autoFocus
           />
@@ -90,14 +97,12 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            name="signIn-password"
+            name="password"
             label="رمز عبور"
             type="password"
-            // value={password}
-            // onChange={(event) =>
-            //   setPassword((_prevState) => event.target.value)
-            // }
-            id="signIn-password"
+            value={formData.password}
+            onChange={onChangeHandler}
+            id="password"
             autoComplete="current-password"
           />
           <FormControlLabel
@@ -114,13 +119,20 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                رمز خود را فراموش کرده اید؟
+              <Link to="#" style={{ textDecoration: "none", color: "inherit" }}>
+                <Typography textAlign="center" variant="body2">
+                  رمز خود را فراموش کرده اید ؟
+                </Typography>
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"حساب کاربری ندارید؟ ثبت نام کنید."}
+              <Link
+                to="/sign-up"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <Typography textAlign="center" variant="body2">
+                  حساب کاربری ندارید؟ ثبت نام کنید.
+                </Typography>
               </Link>
             </Grid>
           </Grid>

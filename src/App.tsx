@@ -1,16 +1,20 @@
 import React from "react";
 import Header from "./Header";
-import SignInComponent from "./SignInComponent";
 import { Route, Routes } from "react-router-dom";
-import HomePage from "./Home";
+import PostsPage from "./PostsPage";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
+import NewPost from "./NewPost";
 
 function App(): React.ReactNode {
   return (
     <>
       <Header />
       <Routes>
-        <Route index element={<HomePage />} />
-        <Route path="sign-in" element={<SignInComponent />} />
+        <Route index path="posts" element={<PostsPage />} />
+        <Route path="login" element={<SignIn />} />
+        <Route path="sign-up" element={<SignUp />} />
+        <Route path="new-post" element={<NewPost />} />
       </Routes>
     </>
   );
