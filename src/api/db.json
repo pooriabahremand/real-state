@@ -2,62 +2,109 @@
   "users": [
     {
       "email": "pooria.bahremand444@gmail.com",
-      "password": "$2a$10$VLe3mPWGqGe3DeiUdWahiuq7lb/RNTTiQ1EnPhSKS6VLnURtfkXmG",
+      "password": "$2a$10$g/aaisvDA/0d4LX9IC1Rj.3Z.CCRmCVq4Eg1czCys2s1JbmY1H5eS",
       "firstName": "پوریا",
       "lastName": "بهره مند ",
-      "allowExtraEmails": false,
+      "allowExtraEmails": true,
+      "role": "user",
       "id": 1
     },
     {
       "email": "pneoooria.bahremand444@gmail.com",
-      "password": "$2a$10$FMx8SOsCu/3Gz56wq7C3LOZs2Gr2g4sE11LV2imBhiR6WWl/WqPju",
-      "firstName": "پوریا",
-      "lastName": "بهره مند ",
-      "allowExtraEmails": false,
+      "password": "$2a$10$Y/VnxjXnIVH0qLmpaNKdmuc/EO.auKfz1EvM53tHc2n4W6pdL2mmi",
+      "firstName": "علی",
+      "lastName": "بهره مند",
+      "allowExtraEmails": true,
+      "role": "user",
       "id": 2
     },
     {
-      "email": "ricktum.beaker@gmail.com",
-      "password": "$2a$10$uftD1ZavpovxNcVUuTKM6ukJzdyDGv8dK6kJKlnEm7A2qPSnw4gru",
-      "firstName": "پوریا",
-      "lastName": "بهره مند ",
+      "email": "Tahereh.niyazi77@gmail.com",
+      "password": "$2a$10$v3EJqjz0osRO8nnos/.4DejHWi0oHpT4cxBvihVyr/cb29fMfyY/6",
+      "firstName": "طاهره",
+      "lastName": "نیازی",
       "allowExtraEmails": false,
+      "role": "user",
       "id": 3
     }
   ],
   "posts": [
     {
-      "address": "پل چوبی - کوچه فروغی - پلاک 35 - واحد 3",
+      "address": "پل چوبی - خیابان انقلاب - کوچه فروغی - پلاک 35 - واحد 3",
       "number": "09931163730",
-      "description": "تخلیه - 94 متر - 2 خواب - نور گیر عالی - بازسازی شده - طبقه 2 رو همکف - مناسب خانواده و مجرد معقول",
+      "description": "94 متر - دو خواب - نورگیر عالی - بازسازی شده - ساختمان قدیمی - تراس دار - انباری - مناسب برای خانواده و مجرد معقول",
       "latlng": {
-        "lat": 35.700686583713086,
-        "lng": 51.43707525723585
+        "lat": 35.700703238279395,
+        "lng": 51.437080511966705
       },
       "userId": 1,
+      "permissions": "421",
       "id": 1
+    },
+    {
+      "address": "بلوار کشاورز - خیابان نادری - کوچه حجت دوست - پلاک 33 و واحد 3",
+      "number": "09128541053",
+      "description": "120 متر - دو خوابه - دو سرویس - بسیار زیبا - طبقه 3",
+      "latlng": {
+        "lat": 35.70886271561454,
+        "lng": 51.400520804462325
+      },
+      "userId": 1,
+      "permissions": "421",
+      "id": 3
+    },
+    {
+      "address": "ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.",
+      "number": "123234",
+      "description": "ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده ",
+      "latlng": {
+        "lat": 35.70886271561454,
+        "lng": 51.400520804462325
+      },
+      "userId": 1,
+      "permissions": "421",
+      "id": 4
+    },
+    {
+      "address": "ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.",
+      "number": "54345",
+      "description": "ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.ورم ایپسوم متن ساختگی با تولید سادگی .",
+      "latlng": {
+        "lat": 35.75995880884442,
+        "lng": 51.397274068258874
+      },
+      "userId": 1,
+      "permissions": "421",
+      "id": 5
     }
   ],
   "routes": {
-    "/posts": {
-      "GET": {
-        "middleware": ["perms:444"]
-      }
-    },
     "/posts/:id": {
-      "GET": {
-        "middleware": ["perms:444"]
-      },
       "PUT": {
-        "middleware": ["auth", "perms:640"]
+        "middleware": [
+          "auth",
+          "perms:640"
+        ]
       },
       "DELETE": {
-        "middleware": ["auth", "perms:640"]
+        "middleware": [
+          "auth",
+          "perms:640"
+        ]
       }
     },
     "/new-post": {
+      "GET": {
+        "middleware": [
+          "auth",
+          "perms:640"
+        ]
+      },
       "POST": {
-        "middleware": ["auth", "perms:640"]
+        "middleware": [
+          "auth",
+          "perms:640"
+        ]
       }
     }
   }

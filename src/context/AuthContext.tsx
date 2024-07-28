@@ -14,6 +14,7 @@ export default function AuthProvider({
   const [user, setUser] = useState<{
     accessToken: string;
     userId: number;
+    role: "user" | "owner";
   } | null>(null);
 
   useEffect(() => {

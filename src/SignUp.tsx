@@ -53,18 +53,21 @@ export default function SignUp(): React.ReactNode {
           email: formData.email,
           password: formData.password,
           allowExtraEmails: formData.allowExtraEmails,
+          role: "user",
         }),
       });
       if (result.accessToken) {
         setUser({
           accessToken: result.accessToken,
           userId: result.user.id,
+          role: result.user.role,
         });
         sessionStorage.setItem(
           "user",
           JSON.stringify({
             accessToken: result.accessToken,
             userId: result.user.id,
+            role: "user",
           })
         );
         navigate("/posts");

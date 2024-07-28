@@ -15,6 +15,7 @@ import { LocationContext } from "../context/LocationContext";
 // TODO remove, this demo shouldn't need to reset the theme.
 
 export default function NewPostForm(): React.ReactNode {
+  // console.log("Form component");
   const navigate = useNavigate();
   const { location } = useContext(LocationContext);
   const { user } = useContext(AuthContext);
@@ -24,7 +25,6 @@ export default function NewPostForm(): React.ReactNode {
     description: "",
   });
 
-  console.log("re-rendered in the map form");
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -33,6 +33,7 @@ export default function NewPostForm(): React.ReactNode {
         ...formData,
         latlng: location,
         userId: user?.userId,
+        permissions: "421",
       }),
     });
     if (Object.keys(result).length === 0) {

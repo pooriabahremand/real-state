@@ -37,8 +37,10 @@ export default function SignIn() {
     event.preventDefault();
     if (signinValidation(formData.email, formData.password)) {
       const result = await post("login", {
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, role: "user" }),
       });
+
+      // console.log(result);
 
       if (result.accessToken) {
         sessionStorage.setItem(
@@ -46,9 +48,14 @@ export default function SignIn() {
           JSON.stringify({
             accessToken: result.accessToken,
             userId: result.user.id,
+            role: "user",
           })
         );
-        setUser({ accessToken: result.accessToken, userId: result.user.id });
+        setUser({
+          accessToken: result.accessToken,
+          userId: result.user.id,
+          role: result.user.role,
+        });
 
         navigate("/posts");
       } else {

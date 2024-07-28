@@ -34,8 +34,7 @@ export default function Header() {
   // Auth Context
   const { user, setUser } = useContext(AuthContext);
 
-  
-  console.log("re-rendered in Header");
+  // console.log("Header");
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );

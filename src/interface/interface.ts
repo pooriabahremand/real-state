@@ -22,11 +22,26 @@ export interface MUIContextValue {
 }
 
 export interface AuthContextInterface {
-  user: { accessToken: string; userId: number } | null;
-  setUser: (value: { accessToken: string; userId: number } | null) => void;
+  user: { accessToken: string; userId: number; role: "user" | "owner" } | null;
+  setUser: (
+    value: { accessToken: string; userId: number; role: string } | null
+  ) => void;
 }
 
 export interface LocationContextInterface {
   location: { lat: number; lng: number } | null;
   setLocation: (value: { lat: number; lng: number }) => void;
+}
+
+export interface PostInterface {
+  address: string;
+  number: string;
+  description: string;
+  latlng: {
+    lat: number;
+    lng: number;
+  };
+  userId: number;
+  permissions: string;
+  id: number;
 }
